@@ -1,6 +1,6 @@
 /******************************************************************
  *
- *   ADD YOUR NAME / SECTION NUMBER HERE
+ *   Rodrigo Rejas / Section 002
  *
  *   This java file contains the problem solutions of canFinish and
  *   numGroups methods.
@@ -82,10 +82,40 @@ class ProblemSolutions {
                                         prerequisites); 
 
         // ADD YOUR CODE HERE - ADD YOUR NAME / SECTION AT TOP OF FILE
+
+
+        int[] state = new int[numExams];
+
+        // DFS method
+        for (int i = 0; i < numExams; i++) {
+            if (state[i] == 0) {
+                if (hasCycle(i, adj, state)) {
+                    return false;
+                }
+            }
+        }
+        // Return true
+        return true;
+    }
+
+    // DFS helper
+    private boolean hasCycle(int node, ArrayList<Integer>[] adj, int[] state) {
+
+        if (state[node] == 1) return true;
+        if (state[node] == 2) return false;
+
+        state[node] = 1;
+
+        for (int next : adj[node]) {
+            if (hasCycle(next, adj, state)) {
+                return true;
+            }
+        }
+
+        state[node] = 2;
         return false;
 
     }
-
 
     /**
      * Method getAdjList
@@ -192,7 +222,36 @@ class ProblemSolutions {
 
         // YOUR CODE GOES HERE - you can add helper methods, you do not need
         // to put all code in this method.
-        return -1;
-    }
 
+        boolean[] visited = new boolean[numNodes];
+        int groups = 0;
+
+        // DFS helper
+        for (int node = 0; node < numNodes; node++) {
+
+
+            if (visited[node]) continue;
+
+            groups++;
+
+            Stack<Integer> stack = new Stack<>();
+            stack.push(node);
+            visited[node] = true;
+
+            while (!stack.isEmpty()) {
+                int curr = stack.pop();
+
+                if (!graph.containsKey(curr)) continue;
+
+                for (int nei : graph.get(curr)) {
+                    if (!visited[nei]) {
+                        visited[nei] = true;
+                        stack.push(nei);
+                    }
+                }
+            }
+        }
+
+        return groups;
+    }
 }
